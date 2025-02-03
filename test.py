@@ -17,5 +17,5 @@ try:
     #     api_key=api_key,
     #     ai_model_id="gpt-4o",
     # )
-except ValidationError   as e:
+except ValidationError as e:
     print(e)
