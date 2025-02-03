@@ -1,4 +1,4 @@
-import asyncio, logging
+import asyncio, logging, os
 
 from semantic_kernel import Kernel
 from semantic_kernel.utils.logging import setup_logging
@@ -13,15 +13,26 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_
     AzureChatPromptExecutionSettings,
 )
 
+# Get keys and configuration from .env file
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.curdir, '.env')
+load_dotenv(dotenv_path)
+
+# Azure OpenAI Details
+api_key = os.getenv("AZURE_OPENAI_API_KEY")
+api_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+aoai_deployment_name = os.getenv("AZURE_OPENAI_TEXT_DEPLOYMENT_NAME")
+
 async def main():
     # Initialize the kernel
     kernel = Kernel()
 
     # Add Azure OpenAI chat completion
     chat_completion = AzureChatCompletion(
-        deployment_name="model name",
-        api_key="API Key",
-        base_url="https://yourURL"
+        deployment_name="gpt-35-turbo",
+        api_key=api_key,
+        endpoint=api_endpoint,
+        service_id="gpt-35-turbo"
     )
     kernel.add_service(chat_completion)
 
@@ -33,7 +44,7 @@ async def main():
 
 
     # Enable planning
-    execution_settings = AzureChatPromptExecutionSettings()
+    execution_settings = AzureChatPromptExecutionSettings(service_id="gpt-35-turbo")
     execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
     # Create a history of the conversation

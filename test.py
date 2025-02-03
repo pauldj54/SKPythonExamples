@@ -16,7 +16,6 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_
 # Get keys and configuration from .env file
 from dotenv import load_dotenv
 dotenv_path = os.path.join(os.path.curdir, '.env')
-print(dotenv_path)
 load_dotenv(dotenv_path)
 
 # Azure OpenAI Details
@@ -31,14 +30,14 @@ async def main()-> None:
 
     gpt4 = AzureChatCompletion(
         api_key = api_key, 
-        base_url = api_endpoint, 
-        deployment_name = aoai_deployment_name,
+        endpoint = api_endpoint, 
+        deployment_name = "gpt-4o",
         service_id= 'gpt4')
 
     gpt35 = AzureChatCompletion(
         api_key = api_key, 
-        base_url = api_endpoint, 
-        deployment_name = 'gpt-35',
+        endpoint = api_endpoint, 
+        deployment_name = 'gpt-35-turbo',
         service_id= 'gpt35')
 
     kernel.add_service(gpt4)
@@ -48,15 +47,12 @@ async def main()-> None:
     setup_logging()
     logging.getLogger("kernel").setLevel(logging.DEBUG)
 
-    # Retrieve the chat completion service by id
-    chat_completion_service = kernel.get_service(service_id="gpt4")
-
     # Retrieve the default inference settings
     # Enable planning
-    execution_settings = AzureChatPromptExecutionSettings(service_id="gpt4")
+    execution_settings = AzureChatPromptExecutionSettings(service_id="gpt35")
     execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
-
+    # Create a chat history object to keep track of the conversation.
     chat_history = ChatHistory()
     chat_history.add_user_message("Finish the following knock-knock joke. Knock, knock. Who's there? Dishes. Dishes who?")
 
