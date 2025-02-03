@@ -31,7 +31,7 @@ async def main()-> None:
     gpt4 = AzureChatCompletion(
         api_key = api_key, 
         endpoint = api_endpoint, 
-        deployment_name = "gpt-4o",
+        deployment_name = "gpt-4",
         service_id= 'gpt4')
 
     gpt35 = AzureChatCompletion(
@@ -51,13 +51,15 @@ async def main()-> None:
     # Enable planning
     execution_settings = AzureChatPromptExecutionSettings(service_id="gpt35")
     execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
+    execution_settings.temperature = 1.0
+    # Here you can add additional prompt settings, for example, max_tokens. 
 
     # Create a chat history object to keep track of the conversation.
     chat_history = ChatHistory()
     chat_history.add_user_message("Finish the following knock-knock joke. Knock, knock. Who's there? Dishes. Dishes who?")
 
     # Get the chat message content from the chat completion service.
-    response = await gpt4.get_chat_message_content(
+    response = await gpt35.get_chat_message_content(
         chat_history=chat_history,
         settings=execution_settings,
         kernel=kernel
