@@ -1,1 +1,1 @@
-#Semantic Kernel Python examples
+# Semantic Kernel Python examples
